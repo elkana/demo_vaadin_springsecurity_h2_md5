@@ -16,23 +16,22 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 
+// https://www.youtube.com/watch?v=4Dm1308EwL8   Build a full-stack Spring Boot web app in 10 minutes (tutorial) Vaadin Flow
 @Route(value = "todo", layout = MainView.class)
 @PageTitle("TODO List| Vaadin CRM")
 @PermitAll
 public class ToDoView extends VerticalLayout {
 
-    private TextField taskName;
-    private Button addButton;
-
     private TaskRepo repoTask;
 
     public ToDoView(TaskRepo repoTask, SecurityService securityService) {
         this.repoTask = repoTask;
+
         var todosList = new VerticalLayout();
         repoTask.findAll().forEach(d -> todosList.add(createCheckbox(d)));
 
-        taskName = new TextField();
-        addButton = new Button("Add", e -> {
+        var taskName = new TextField();
+        var addButton = new Button("Add", e -> {
             var newTodo = repoTask.save(McTask.builder().name(taskName.getValue())
                     .createdBy(securityService.getAuthenticatedUser().getUsername()).build());
             todosList.add(createCheckbox(newTodo));
