@@ -8,6 +8,7 @@ import com.example.demovaadin.view.AdminView;
 import com.example.demovaadin.view.DashboardView;
 import com.example.demovaadin.view.ToDoView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -23,13 +24,13 @@ public class MainView extends AppLayout {
         if (securityService.getAuthenticatedUser() == null)
             return;
         H2 logo = new H2("Mobile Collection Monitoring");
-        // logo.setClassName(null);
 
         var header = new HorizontalLayout(new DrawerToggle(), logo,
+                new Text(securityService.getUserDetail().getFullName()),
                 // logout
-                new Button("LogOut " + securityService.getAuthenticatedUser().getUsername(),
-                        click -> securityService.logout()));
+                new Button("LogOut", click -> securityService.logout()));
         header.setWidthFull();
+        // stretch the logo part
         header.expand(logo);
         addToNavbar(header);
 
@@ -37,10 +38,9 @@ public class MainView extends AppLayout {
         menu.add(new RouterLink("Dashboard", DashboardView.class));
         menu.add(new RouterLink("To Do", ToDoView.class));
         if (securityService.isAdmin())
-        menu.add(new RouterLink("Admin", AdminView.class));
+            menu.add(new RouterLink("Admin", AdminView.class));
 
         addToDrawer(new VerticalLayout(menu.toArray(Component[]::new)));
-
     }
 
 }

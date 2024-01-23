@@ -1,8 +1,10 @@
 package com.example.demovaadin.view;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demovaadin.MainView;
+import com.example.demovaadin.model.McTask;
+import com.example.demovaadin.repo.TaskRepo;
 import com.example.demovaadin.service.SecurityService;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -22,13 +24,20 @@ public class ToDoView extends VerticalLayout {
     private TextField taskName;
     private Button addButton;
 
-    public ToDoView() {
+    private TaskRepo repoTask;
+
+    public ToDoView(TaskRepo repoTask, SecurityService securityService) {
+        this.repoTask = repoTask;
         var todosList = new VerticalLayout();
+        repoTask.findAll().forEach(d -> todosList.add(createCheckbox(d)));
+
         taskName = new TextField();
         addButton = new Button("Add", e -> {
-            todosList.add(new Checkbox(taskName.getValue()));
-            //reset
-            taskName.setValue("");
+            var newTodo = repoTask.save(McTask.builder().name(taskName.getValue())
+                    .createdBy(securityService.getAuthenticatedUser().getUsername()).build());
+            todosList.add(createCheckbox(newTodo));
+            // reset
+            taskName.clear();
         });
         addButton.addClickShortcut(Key.ENTER);
 
@@ -40,6 +49,13 @@ public class ToDoView extends VerticalLayout {
                 // form
                 new HorizontalLayout(taskName, addButton));
 
+    }
+
+    private Component createCheckbox(McTask task) {
+        return new Checkbox(task.getName(), task.isDone(), e -> {
+            task.setDone(task.isDone() ? 0 : 1);
+            repoTask.save(task);
+        });
     }
 
 }
