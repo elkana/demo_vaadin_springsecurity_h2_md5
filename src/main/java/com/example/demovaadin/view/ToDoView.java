@@ -19,19 +19,26 @@ import jakarta.annotation.security.PermitAll;
 @PermitAll
 public class ToDoView extends VerticalLayout {
 
+    private TextField taskName;
+    private Button addButton;
+
     public ToDoView() {
         var todosList = new VerticalLayout();
-        var taskField = new TextField();
-        var addButton = new Button("Add", e -> {
-            var checkbox = new Checkbox(taskField.getValue());
-            todosList.add(checkbox);
-            taskField.setValue("");
-
+        taskName = new TextField();
+        addButton = new Button("Add", e -> {
+            todosList.add(new Checkbox(taskName.getValue()));
+            //reset
+            taskName.setValue("");
         });
         addButton.addClickShortcut(Key.ENTER);
 
-        add(new HorizontalLayout(new H1("Vaadin Todo")), todosList,
-                new HorizontalLayout(taskField, addButton));
+        add(
+                // header
+                new HorizontalLayout(new H1("Vaadin Todo")),
+                // content
+                todosList,
+                // form
+                new HorizontalLayout(taskName, addButton));
 
     }
 

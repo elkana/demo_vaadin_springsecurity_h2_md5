@@ -1,5 +1,7 @@
 package com.example.demovaadin.security;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,17 +22,24 @@ public class ServiceJwtUserDetails implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) {
-        McUser tblUser = repoUser.findById(username).orElseThrow(
+        var tblUser = repoUser.findById(username).orElseThrow(
                 // () -> new UsernameNotFoundException("Mismatch UserId or Password"));
                 () -> new UsernameNotFoundException(Constants.MSG_UNAUTHORIZED));
-        return new User(tblUser.getUserId(), tblUser.getEncryptedPwd(),
-                java.util.Collections.emptyList());
+        return new User(tblUser.getUserId(), tblUser.getEncryptedPwd(), getAuthorities(tblUser));
     }
 
     // reserved
-    // private static List<GrantedAuthority> getAuthorities(User user) {
-    //     return user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-    //             .collect(Collectors.toList());
+    private static List<GrantedAuthority> getAuthorities(McUser user) {
+        List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
 
-    // }    
+        list.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+
+        return list;
+        // List<GrantedAuthority> ga = user.getRoles().stream().map(role -> new
+        // SimpleGrantedAuthority("ROLE_" + role))
+        // .collect(Collectors.toList());
+        // var ga = user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+        // .collect(Collectors.toList());
+        // return ga;
+    }
 }
