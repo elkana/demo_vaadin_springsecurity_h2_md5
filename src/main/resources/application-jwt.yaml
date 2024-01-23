@@ -1,0 +1,44 @@
+
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      default: http://${localhost}:8761/eureka
+
+# jwt.encryption.secret=elkanasecret
+# # 6 jam = 21600
+# # 12 jam = 43200
+# jwt.token.expirationSeconds=150
+# jwt.tokenRefresh.expirationSeconds=300
+
+jwt:
+  encryption:
+    secret: elkanasecret
+  token:
+    expirationSeconds: 150
+  tokenRefresh:
+    expirationSeconds: 300
+
+uri:
+  nonjwt: >
+    /auth/v1/login,
+    /auth/v1/change_pwd,
+    /setup/v1/get_mobile_setup,
+    /media/v1/skt/**,
+    /media/v1/avatar/**,
+    /media/v1/skt_by/**,
+    /demo/create_demo,
+    /demo/hello1,
+    /demo/hello2,
+    /h2-console/**,
+    /web/**,
+    /skt/**,
+    /swagger-ui/**,
+    /swagger-resources/**,
+    /webjars/**,
+    /v2/api-docs/**,
+    /v3/api-docs/**
+
+
