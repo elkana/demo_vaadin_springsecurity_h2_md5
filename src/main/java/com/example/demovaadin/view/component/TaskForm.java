@@ -43,6 +43,7 @@ public class TaskForm extends FormLayout {
 
         var delete = new Button("Delete");
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        
         var cancel = new Button("Cancel");
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         return new HorizontalLayout(save, delete, cancel);
