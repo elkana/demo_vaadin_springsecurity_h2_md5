@@ -26,7 +26,7 @@ public class McTask {
     @GeneratedValue
     private Long id;
     private String name;
-    private Integer done;
+    private Boolean done;
 
     private String createdBy;
     @CreatedDate
@@ -35,6 +35,6 @@ public class McTask {
 
     @Transient
     public boolean isDone() {
-        return done != null && done.intValue() == 1;
+        return done != null && done.booleanValue();
     }
 }

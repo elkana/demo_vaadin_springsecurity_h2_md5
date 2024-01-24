@@ -16,7 +16,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 
-// https://www.youtube.com/watch?v=4Dm1308EwL8   Build a full-stack Spring Boot web app in 10 minutes (tutorial) Vaadin Flow
+// https://www.youtube.com/watch?v=4Dm1308EwL8 Build a full-stack Spring Boot web app in 10 minutes
+// (tutorial) Vaadin Flow
 @Route(value = "todo", layout = MainView.class)
 @PageTitle("TODO List| Vaadin CRM")
 @PermitAll
@@ -52,7 +53,7 @@ public class ToDoView extends VerticalLayout {
 
     private Component createCheckbox(McTask task) {
         return new Checkbox(task.getName(), task.isDone(), e -> {
-            task.setDone(task.isDone() ? 0 : 1);
+            task.setDone(!task.isDone());
             repoTask.save(task);
         });
     }
