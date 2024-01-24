@@ -26,10 +26,12 @@ public class AdminView extends VerticalLayout {
     TaskForm form;
     
     public AdminView(TaskRepo repoTask) {
+        addClassName("list-view");
         setSizeFull();  // must first
-        
+
         // configure grid
         var grid = new Grid<McTask>();
+        grid.addClassNames("contact-grid");
         grid.setItems(repoTask.findAll());
         grid.addColumn(McTask::getId).setHeader("Id").setComparator(McTask::getId);
         grid.addColumn(McTask::getName).setHeader("Name").setComparator(McTask::getName);
@@ -49,7 +51,6 @@ public class AdminView extends VerticalLayout {
         var sideBySide = new HorizontalLayout(grid, form);
         sideBySide.setFlexGrow(2, grid);
         sideBySide.setFlexGrow(1, form);
-        sideBySide.addClassName("content");
         sideBySide.setSizeFull();
 
         add(new H1("Admin Page"), sideBySide);
@@ -67,6 +68,7 @@ public class AdminView extends VerticalLayout {
         }
     }
 
+    // utk bisa ngumpetin form, cuma bisa via CSS ternyata :(
     private void closeForm() {
         form.setData(null);
         form.setVisible(false);

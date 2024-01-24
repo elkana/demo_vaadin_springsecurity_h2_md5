@@ -15,15 +15,13 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 @EnableJpaAuditing
-@Theme(variant = Lumo.DARK)
+@Theme(value="my-theme", variant = Lumo.DARK)
 @SpringBootApplication
 public class DemoVaadinApplication implements AppShellConfigurator {
     @Autowired
     Environment env;
 
-    public static void main(String[] args) {
-        SpringApplication.run(DemoVaadinApplication.class, args);
-    }
+    public static void main(String[] args) { SpringApplication.run(DemoVaadinApplication.class, args); }
 
     @EventListener({ApplicationReadyEvent.class})
     void applicationReadyEvent() {

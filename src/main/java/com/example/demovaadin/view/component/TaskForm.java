@@ -21,8 +21,7 @@ public class TaskForm extends FormLayout {
     Checkbox done = new Checkbox("Status");
 
     public TaskForm() {
-
-        // binder.bindInstanceFields(this); ga bisa gara2 checkboxnya boolean vs integer
+        // binder.bindInstanceFields(this); ga bisa gara2 checkboxnya beda tipe (boolean vs integer)
         binder.forField(name)
                 // Explicit validator instance
                 // .withValidator(new EmailValidator("This doesn't look like a valid email
@@ -30,7 +29,7 @@ public class TaskForm extends FormLayout {
                 .bind(McTask::getName, McTask::setName);
 
         binder.forField(done)
-        // .withConverter(new IntegerTo)
+                // .withConverter(new IntegerTo)
                 .bind(McTask::getDone, McTask::setDone);
 
         add(new VerticalLayout(name, done), createButtons());
@@ -43,7 +42,7 @@ public class TaskForm extends FormLayout {
 
         var delete = new Button("Delete");
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        
+
         var cancel = new Button("Cancel");
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         return new HorizontalLayout(save, delete, cancel);
@@ -59,9 +58,4 @@ public class TaskForm extends FormLayout {
         // binder.readBean(data);
         binder.setBean(data);
     }
-
-    public void setVisible(boolean b) {
-        // throw new UnsupportedOperationException("Unimplemented method 'setVisible'");
-    }
-
 }
