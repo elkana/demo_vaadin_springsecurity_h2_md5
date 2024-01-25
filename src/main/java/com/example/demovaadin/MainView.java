@@ -18,7 +18,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.Lumo;
-
+// https://vaadin.com/docs/latest/application/main-view
 public class MainView extends AppLayout {
 
     // https://vaadin.com/docs/latest/tutorial/login-and-authentication
@@ -27,20 +27,18 @@ public class MainView extends AppLayout {
             return;
         H2 logo = new H2("Mobile Collection Monitoring");
 
-        var headerLayout =
-                new HorizontalLayout(new DrawerToggle(), logo, 
-                //https://vaadin.com/blog/toggle-dark-lumo-theme-variant-dynamically
-                new Checkbox("Dark", true , e -> {
+        var headerLayout = new HorizontalLayout(new DrawerToggle(), logo,
+                // https://vaadin.com/blog/toggle-dark-lumo-theme-variant-dynamically
+                new Checkbox("Dark", true, e -> {
                     boolean isDark = e.getSource().getValue().booleanValue();
                     // e.getSource().setLabel(!isDark?"Switch to light": "Switch to dark");
                     var js = "document.documentElement.setAttribute('theme', $0)";
                     getElement().executeJs(js, !isDark ? Lumo.LIGHT : Lumo.DARK);
                 }), new Text(securityService.getUserDetail().getFullName()),
-                        // logout
-                        new Button("LogOut", click -> securityService.logout()));
+                // logout
+                new Button("LogOut", click -> securityService.logout()));
         headerLayout.setWidthFull();
-        // stretch the logo part
-        headerLayout.expand(logo);
+        headerLayout.expand(logo); // stretch the logo area
         addToNavbar(headerLayout);
 
         List<Component> menu = new ArrayList<Component>();

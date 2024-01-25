@@ -1,18 +1,16 @@
 package com.example.demovaadin.model;
 
-import java.util.Collection;
 import java.util.Date;
-import org.springframework.context.annotation.Role;
+
 import org.springframework.data.annotation.CreatedDate;
+
 import com.example.demovaadin.common.JsonDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

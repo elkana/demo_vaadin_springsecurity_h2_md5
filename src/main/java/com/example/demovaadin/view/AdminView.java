@@ -1,42 +1,54 @@
 package com.example.demovaadin.view;
 
-import java.util.Set;
-
 import com.example.demovaadin.MainView;
 import com.example.demovaadin.model.McTask;
-import com.example.demovaadin.repo.TaskRepo;
 import com.example.demovaadin.service.ServiceTask;
 import com.example.demovaadin.view.component.TaskForm;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.shared.communication.PushMode;
 
 import jakarta.annotation.security.RolesAllowed;
 
 // https://www.youtube.com/watch?v=bxy2JgqqKDU
+// https://vaadin.com/docs/latest/advanced/long-running-tasks
 // see ServiceJwtUserDetails#getAuthorities
 @Route(value = "admin", layout = MainView.class)
 @PageTitle("A view only for admins")
 @RolesAllowed({ "ROLE_ADM" })
 public class AdminView extends VerticalLayout {
     ServiceTask svcTask;
-    TaskForm form;
+    TaskForm form = new TaskForm();
     Grid<McTask> grid = new Grid<McTask>();
+    ProgressBar progressBar = new ProgressBar();
+    private Button btnRefresh = new Button("Say hello", e -> refreshList());
 
     public AdminView(ServiceTask svcTask) {
         this.svcTask = svcTask;
+        // https://github.com/vaadin/flow/issues/7365
+        UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC); // must to enable async
+
         addClassName("list-view");
         setSizeFull(); // must first before css setup
 
+        // configure progressbar
+        progressBar.setIndeterminate(true);
+        progressBar.setVisible(false);
+        progressBar.setWidth("200px");
+
         // configure grid
         grid.addClassNames("contact-grid");
-        refreshList();
         grid.addColumn(McTask::getId).setHeader("Id").setComparator(McTask::getId);
         grid.addColumn(McTask::getName).setHeader("Name").setComparator(McTask::getName);
         grid.addColumn(McTask::getDone).setHeader("Is Done").setComparator(McTask::getDone);
@@ -48,23 +60,25 @@ public class AdminView extends VerticalLayout {
         });
         grid.asSingleSelect().addValueChangeListener(e -> editForm(e.getValue()));
         grid.setSizeFull(); // must to be able to use flex
+        refreshList();
 
         // configure form
-        form = new TaskForm();
         form.setWidth("25em");
-        form.addDeleteListener((e1) -> {
-            var d = new ConfirmDialog("Confirmation", "Hapus " + e1.get().getName() + " ?", "Ya", e2 -> {
-                svcTask.deleteTask(e1.get());
-                Notification.show(e1.get().getName() + " deleted");
+        // setup form callbacks
+        form.addDeleteListener((deleteEvent) -> {
+            // https://vaadin.com/docs/latest/components/confirm-dialog
+            new ConfirmDialog("Confirmation", "Hapus " + deleteEvent.get().getName() + " ?", "Ya", e2 -> {
+                svcTask.deleteTask(deleteEvent.get());
+                var notify = new Notification(deleteEvent.get().getName() + " deleted");
+                notify.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                notify.open();
                 refreshList();
                 closeForm();
             }, "Batal", e2 -> {
-            });
-            d.open();
+            }).open();
         });
-
-        form.addSaveListener((e1) -> {
-            svcTask.saveTask(e1.get());
+        form.addSaveListener((saveEvent) -> {
+            svcTask.saveTask(saveEvent.get());
             refreshList();
         });
 
@@ -74,7 +88,8 @@ public class AdminView extends VerticalLayout {
         sideBySide.setFlexGrow(1, form);
         sideBySide.setSizeFull();
 
-        add(new H1("Admin Page"), sideBySide);
+        add(new HorizontalLayout(new H1("Admin Page"), btnRefresh), progressBar,
+                sideBySide);
 
         // krn kondisi awal blm terselect, tutup formnya
         closeForm();
@@ -99,6 +114,16 @@ public class AdminView extends VerticalLayout {
     }
 
     private void refreshList() {
-        grid.setItems(svcTask.findTasks(null));
+        progressBar.setVisible(true);
+        btnRefresh.setEnabled(false);
+
+        var ui = UI.getCurrent();
+        svcTask.findAsyncTasks(null).thenAccept(result -> {
+            ui.access(() -> {
+                progressBar.setVisible(false);
+                btnRefresh.setEnabled(true);
+                grid.setItems(result);
+            });
+        });
     }
 }

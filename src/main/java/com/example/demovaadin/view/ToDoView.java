@@ -48,7 +48,6 @@ public class ToDoView extends VerticalLayout {
                 todosList,
                 // form
                 new HorizontalLayout(taskName, addButton));
-
     }
 
     private Component createCheckbox(McTask task) {
