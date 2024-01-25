@@ -32,7 +32,6 @@ public class SecurityConfig extends VaadinWebSecurity {
         // https://stackoverflow.com/questions/74582626/vaadin-websecurity-connect-to-h2-database-forbidden
         http.csrf(csrf -> csrf.disable());
         http.headers(headers -> headers.frameOptions(f -> f.disable()));
-
     }
 
     @Bean

@@ -2,6 +2,8 @@ package com.example.demovaadin.view.component;
 
 import com.example.demovaadin.model.McTask;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -11,8 +13,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.shared.Registration;
 
 // https://github.com/vaadin/flow-crm-tutorial/tree/v24/src
+// jadi form ini tidak ada business logicnya, cuma link event ke external saja, dalam hal ini AdminView.java
 public class TaskForm extends FormLayout {
     Binder<McTask> binder = new BeanValidationBinder<>(McTask.class);
     // krn pake binding, nama variable wajib global dan sama dgn field di mctask
@@ -21,7 +25,9 @@ public class TaskForm extends FormLayout {
     Checkbox done = new Checkbox("Status");
 
     public TaskForm() {
-        // binder.bindInstanceFields(this); ga bisa gara2 checkboxnya beda tipe (boolean vs integer)
+        // binder.bindInstanceFields(this); ga bisa pake bindInstanceFields gara2
+        // checkboxnya beda tipe (boolean
+        // vs integer)
         binder.forField(name)
                 // Explicit validator instance
                 // .withValidator(new EmailValidator("This doesn't look like a valid email
@@ -38,24 +44,66 @@ public class TaskForm extends FormLayout {
     private Component createButtons() {
         var save = new Button("Save");
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        save.addClickListener(e -> validateAndSave());
+        save.addClickListener(e -> {
+            if (binder.isValid()) {
+                fireEvent(new SaveEvent(this, binder.getBean())); // <6>
+            }
+        });
 
         var delete = new Button("Delete");
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        delete.addClickListener(e -> {
+            // TODO delete via binder, krn utk CRUD dilakukan di AdminView via Event bukan
+            // disini
+            fireEvent(new DeleteEvent(this, binder.getBean()));
+        });
 
-        var cancel = new Button("Cancel");
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        return new HorizontalLayout(save, delete, cancel);
+        // var cancel = new Button("Cancel");
+        // cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        return new HorizontalLayout(save, delete);
     }
-
-    private void validateAndSave() {
-        //
-    }
-
 
     public void setData(McTask data) {
-        // this.data = data;
-        // binder.readBean(data);
         binder.setBean(data);
     }
+
+    // provide listeners for caller using specific request (save/delete...etc)
+    // https://vaadin.com/docs/latest/create-ui/creating-components/events#defining-an-event-listener
+    public Registration addDeleteListener(ComponentEventListener<DeleteEvent> listener) { // <1>
+        return addListener(DeleteEvent.class, listener);
+    }
+
+    public Registration addSaveListener(ComponentEventListener<SaveEvent> listener) { // <2>
+        return addListener(SaveEvent.class, listener);
+    }
+
+    // MUST create custom events INSIDE TaskForm
+    // https://vaadin.com/docs/latest/create-ui/creating-components/events#defining-an-event-listener
+    public abstract class TaskFormEvent extends ComponentEvent<TaskForm> {
+        private McTask data;
+
+        TaskFormEvent(TaskForm source, McTask data) {
+            super(source, false);
+            this.data = data;
+        }
+
+        public McTask get() {
+            return data;
+        }
+    }
+
+    public class DeleteEvent extends TaskFormEvent {
+        DeleteEvent(TaskForm source, McTask data) {
+            super(source, data);
+        }
+
+    }
+
+    public class SaveEvent extends TaskFormEvent {
+        SaveEvent(TaskForm source, McTask data) {
+            super(source, data);
+        }
+
+    }
+
 }
