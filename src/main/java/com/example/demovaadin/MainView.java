@@ -76,8 +76,10 @@ public class MainView extends AppLayout {
         var sideNav = new SideNav();
         sideNav.addItem(new SideNavItem("Dashboard", "/", VaadinIcon.DASHBOARD.create()),
                 new SideNavItem("Tasks", "/todo", VaadinIcon.LIST.create()));
-        if (serviceSecurity.isAdmin())
+        if (serviceSecurity.isAdmin()) {
             sideNav.addItem(new SideNavItem("Admin", "/admin", VaadinIcon.RECORDS.create()));
+            sideNav.addItem(new SideNavItem("Admin w/Paging", "/adminPaging", VaadinIcon.RECORDS.create()));
+        }
         // new SideNavItem("Orders", "/orders", VaadinIcon.CART.create()),
         // new SideNavItem("Customers", "/customers", VaadinIcon.USER_HEART.create()),
         // new SideNavItem("Products", "/products", VaadinIcon.PACKAGE.create()),
