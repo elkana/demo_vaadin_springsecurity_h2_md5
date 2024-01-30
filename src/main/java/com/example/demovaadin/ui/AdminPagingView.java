@@ -1,4 +1,4 @@
-package com.example.demovaadin.view;
+package com.example.demovaadin.ui;
 
 import com.example.demovaadin.MainView;
 import com.example.demovaadin.model.McTask;

@@ -1,4 +1,4 @@
-package com.example.demovaadin.view.component;
+package com.example.demovaadin.ui.component;
 
 import com.example.demovaadin.model.McTask;
 import com.vaadin.flow.component.Component;
@@ -82,8 +82,8 @@ public class TaskForm extends FormLayout {
     public abstract class TaskFormEvent extends ComponentEvent<TaskForm> {
         private McTask data;
 
-        TaskFormEvent(TaskForm source, McTask data) {
-            super(source, false);
+        TaskFormEvent(TaskForm form, McTask data) {
+            super(form, false);
             this.data = data;
         }
 
@@ -93,15 +93,15 @@ public class TaskForm extends FormLayout {
     }
 
     public class DeleteEvent extends TaskFormEvent {
-        DeleteEvent(TaskForm source, McTask data) {
-            super(source, data);
+        DeleteEvent(TaskForm form, McTask data) {
+            super(form, data);
         }
 
     }
 
     public class SaveEvent extends TaskFormEvent {
-        SaveEvent(TaskForm source, McTask data) {
-            super(source, data);
+        SaveEvent(TaskForm form, McTask data) {
+            super(form, data);
         }
 
     }

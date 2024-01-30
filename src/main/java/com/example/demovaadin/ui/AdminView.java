@@ -1,9 +1,9 @@
-package com.example.demovaadin.view;
+package com.example.demovaadin.ui;
 
 import com.example.demovaadin.MainView;
 import com.example.demovaadin.model.McTask;
 import com.example.demovaadin.service.ServiceTask;
-import com.example.demovaadin.view.component.TaskForm;
+import com.example.demovaadin.ui.component.TaskForm;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
@@ -32,7 +32,7 @@ public class AdminView extends VerticalLayout {
     TaskForm form = new TaskForm();
     Grid<McTask> grid = new Grid<McTask>();
     ProgressBar progressBar = new ProgressBar();
-    private Button btnRefresh = new Button("Say hello", e -> refreshList());
+    private Button btnRefresh = new Button("Refresh", e -> refreshList());
 
     public AdminView(ServiceTask svcTask) {
         this.svcTask = svcTask;

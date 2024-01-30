@@ -1,4 +1,4 @@
-package com.example.demovaadin.view;
+package com.example.demovaadin.ui;
 
 import com.example.demovaadin.MainView;
 import com.example.demovaadin.model.McTask;
@@ -19,7 +19,7 @@ import jakarta.annotation.security.PermitAll;
 // https://www.youtube.com/watch?v=4Dm1308EwL8 Build a full-stack Spring Boot web app in 10 minutes
 // (tutorial) Vaadin Flow
 @Route(value = "todo", layout = MainView.class)
-@PageTitle("TODO List| Vaadin CRM")
+@PageTitle("TODO List| CRM")
 @PermitAll
 public class ToDoView extends VerticalLayout {
 
@@ -43,7 +43,7 @@ public class ToDoView extends VerticalLayout {
 
         add(
                 // header
-                new HorizontalLayout(new H1("Vaadin Todo")),
+                new HorizontalLayout(new H1("Todo List")),
                 // content
                 todosList,
                 // form
