@@ -26,7 +26,12 @@ public class McTask {
     @GeneratedValue
     private Long id;
     private String name;
+    private String description;
+    private TaskEnum flag;
     private Boolean done;
+
+    @JsonSerialize(using = JsonDateTimeSerializer.class)
+    private Date dueDate;
 
     private String createdBy;
     @CreatedDate

@@ -5,27 +5,45 @@ import java.util.Arrays;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
-
+import com.example.demovaadin.model.McTask;
+import com.example.demovaadin.repo.TaskRepo;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 @EnableAsync
 @EnableJpaAuditing
-@Theme(value="my-theme", variant = Lumo.DARK)
+@Theme(value = "my-theme", variant = Lumo.DARK)
 @SpringBootApplication
 public class DemoVaadinApplication implements AppShellConfigurator {
     @Autowired
     Environment env;
 
-    public static void main(String[] args) { SpringApplication.run(DemoVaadinApplication.class, args); }
+    public static void main(String[] args) {
+        SpringApplication.run(DemoVaadinApplication.class, args);
+    }
+
+    // initiate data
+    @Bean
+    public CommandLineRunner run(TaskRepo repo) {
+        return args -> {
+            // Data baru = new Data();
+            repo.save(
+                    McTask.builder().name("Task 1").description("Common Task description").build());
+            repo.save(
+                    McTask.builder().name("Task 2").description("Common Task description").build());
+        };
+    }
+
 
     @EventListener({ApplicationReadyEvent.class})
     void applicationReadyEvent() {

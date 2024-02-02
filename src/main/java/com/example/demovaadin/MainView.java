@@ -1,29 +1,23 @@
 package com.example.demovaadin;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demovaadin.service.SecurityService;
-import com.example.demovaadin.ui.AdminView;
-import com.example.demovaadin.ui.DashboardView;
-import com.example.demovaadin.ui.ToDoView;
-import com.vaadin.flow.component.Component;
+import com.example.demovaadin.ui.component.TaskForm;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
-import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
@@ -34,11 +28,9 @@ public class MainView extends AppLayout {
 
     // https://vaadin.com/docs/latest/tutorial/login-and-authentication
     public MainView(SecurityService serviceSecurity) {
-        if (serviceSecurity.getAuthenticatedUser() == null)
-            return;
         this.serviceSecurity = serviceSecurity;
-        H2 logo = new H2("Mobile Collection Monitoring");
-        logo.getStyle().set("font-size", "var(--lumo-font-size-l)")
+        H2 title = new H2("Mobile Collection Monitoring");
+        title.getStyle().set("font-size", "var(--lumo-font-size-l)")
                 .set("line-height", "var(--lumo-size-l)").set("margin", "0 var(--lumo-space-m)");
 
         // configure popup menu on avatar
@@ -49,13 +41,18 @@ public class MainView extends AppLayout {
         subMenuTheme.getSubMenu().addItem("Light", click -> changeTheme(false));
         subMenuTheme.getSubMenu().addItem("Dark", click -> changeTheme(true));
         avatarMenu.add(new Hr());
-        avatarMenu.addItem("Logout", click -> serviceSecurity.logout());
+        if (serviceSecurity.getAuthenticatedUser() == null)
+            avatarMenu.addItem("Logout", click -> serviceSecurity.logout());
+        else
+            avatarMenu.addItem("Login", click -> gotoLogin());
 
-        // configureheader
-        var headerLayout = new HorizontalLayout(new DrawerToggle(), logo,
+        // configure header
+        var headerLayout = new HorizontalLayout(new DrawerToggle(), title,
+                // https://vaadin.com/docs/latest/components/button -> button with icon
+                new Button("Add Task", new Icon(VaadinIcon.PLUS), e -> addTask()),
                 new Text(serviceSecurity.getUserDetail().getFullName()), avatar);
         headerLayout.setWidthFull();
-        headerLayout.expand(logo); // stretch the logo area
+        headerLayout.expand(title); // stretch the title area
         addToNavbar(headerLayout);
 
         // configure drawer
@@ -64,12 +61,6 @@ public class MainView extends AppLayout {
         scroller.setClassName(LumoUtility.Padding.SMALL);
         addToDrawer(scroller);
 
-        // List<Component> menu = new ArrayList<Component>();
-        // menu.add(new RouterLink("Dashboard", DashboardView.class));
-        // menu.add(new RouterLink("To Do", ToDoView.class));
-        // if (serviceSecurity.isAdmin())
-        // menu.add(new RouterLink("Admin", AdminView.class));
-        // addToDrawer(new VerticalLayout(menu.toArray(Component[]::new)));
     }
 
     private SideNav getSideNav() {
@@ -78,7 +69,8 @@ public class MainView extends AppLayout {
                 new SideNavItem("Tasks", "/todo", VaadinIcon.LIST.create()));
         if (serviceSecurity.isAdmin()) {
             sideNav.addItem(new SideNavItem("Admin", "/admin", VaadinIcon.RECORDS.create()));
-            sideNav.addItem(new SideNavItem("Admin w/Paging", "/adminPaging", VaadinIcon.RECORDS.create()));
+            sideNav.addItem(
+                    new SideNavItem("Admin w/Paging", "/adminPaging", VaadinIcon.RECORDS.create()));
         }
         // new SideNavItem("Orders", "/orders", VaadinIcon.CART.create()),
         // new SideNavItem("Customers", "/customers", VaadinIcon.USER_HEART.create()),
@@ -95,4 +87,16 @@ public class MainView extends AppLayout {
         getElement().executeJs(js, dark ? Lumo.DARK : Lumo.LIGHT);
     }
 
+    private void addTask() {
+        var dialog = new Dialog("Judul");
+        dialog.setHeaderTitle("New task");
+        dialog.add(new TaskForm());
+        dialog.setWidth("80em");
+        dialog.setResizable(true);
+        dialog.open();
+    }
+
+    private void gotoLogin() {
+        //
+    }
 }

@@ -24,6 +24,4 @@ public class LoginView extends Composite<LoginOverlay> {
         getContent().setOpened(true);
         getContent().setAction("login");
     }
-
-
 }
