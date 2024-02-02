@@ -1,10 +1,39 @@
 
 
-
 > to use Form, dont put business logic. just create listeners for callbacks.
 
 
 ## FAQs:
+
+### Q: How to apply Role ?
+
+A: see ServiceJwtUserDetails.java & AdminView.java
+assume we are using 1 role per user.
+on a view:
+```java
+@Route
+@RolesAllowed({"ROLE_ADM"})
+public class AdminView extends Div {
+    ....
+}
+```
+
+ServiceJwtUserDetails.getAuthorities has job to concat role with convention like "ROLE_XXXX"
+
+in table user you have column like :
+```sql
+INSERT INTO MC_USER(user_id, role, full_name....)
+values ('elkana911', 'ADM', 'elkana 911'....)
+```
+
+As you can see, role ADM will be concat as ROLE_ADM and use it on a view.
+
+> for multiple roles per user please seek another example.
+
+### Q: How to use Grid ?
+
+A: see AdminView.java
+
 
 ### Q: How to show Form in Dialog ?
 
@@ -31,10 +60,11 @@ to stretch a component, just do `setColspan(description, 2)`
 A: see TaskForm.java
 ```java
 Binder<McTask> binder = new BeanValidationBinder<>(McTask.class);   // global 
+DatePicker dueDate = new DatePicker("Due Date");
 ...
 binder.forField(dueDate).withConverter(new LocalDateToDateConverter())
       .bind(McTask::getDueDate, McTask::setDueDate); // inside constructor
-// because Vaadin use LocalDate, you need to convert to java.util.Date using LocalDateToDateConverter
+// because DatePicker use LocalDate, you need to convert to java.util.Date using LocalDateToDateConverter
 
 // provide public method to assign object from external
 public void setData(McTask data){

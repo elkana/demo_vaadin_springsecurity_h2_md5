@@ -39,6 +39,7 @@ public class AdminView extends VerticalLayout {
         // https://github.com/vaadin/flow/issues/7365
         UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC); // must to enable async
 
+        // need use css to play hide-and-seek
         addClassName("list-view");
         setSizeFull(); // must first before css setup
 
