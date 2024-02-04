@@ -32,14 +32,14 @@ public class AdminView extends VerticalLayout {
     TaskForm form = new TaskForm();
     Grid<McTask> grid = new Grid<McTask>();
     ProgressBar progressBar = new ProgressBar();
-    private Button btnRefresh = new Button("Refresh", e -> refreshList());
+    Button btnRefresh = new Button("Refresh", e -> refreshList());
 
     public AdminView(ServiceTask svcTask) {
         this.svcTask = svcTask;
         // https://github.com/vaadin/flow/issues/7365
         UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC); // must to enable async
 
-        // need use css to play hide-and-seek
+        // need use css to play
         addClassName("list-view");
         setSizeFull(); // must first before css setup
 
@@ -50,6 +50,7 @@ public class AdminView extends VerticalLayout {
 
         // configure grid
         grid.addClassNames("contact-grid");
+        // prepare columns
         grid.addColumn(McTask::getId).setHeader("Id").setComparator(McTask::getId);
         grid.addColumn(McTask::getName).setHeader("Name").setComparator(McTask::getName);
         grid.addColumn(McTask::getDone).setHeader("Is Done").setComparator(McTask::getDone);
@@ -60,7 +61,7 @@ public class AdminView extends VerticalLayout {
             // Notification.show(selected.size() + " items selected");
         });
         grid.asSingleSelect().addValueChangeListener(e -> editForm(e.getValue()));
-        grid.setSizeFull(); // must to be able to use flex
+        grid.setSizeFull(); // must to be able to use flex later
         refreshList();
 
         // configure form
