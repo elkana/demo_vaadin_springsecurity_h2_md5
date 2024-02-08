@@ -41,7 +41,7 @@ public class MainView extends AppLayout {
         subMenuTheme.getSubMenu().addItem("Light", click -> changeTheme(false));
         subMenuTheme.getSubMenu().addItem("Dark", click -> changeTheme(true));
         avatarMenu.add(new Hr());
-        if (serviceSecurity.getAuthenticatedUser() == null)
+        if (serviceSecurity.getAuthenticatedUser() != null)
             avatarMenu.addItem("Logout", click -> serviceSecurity.logout());
         else
             avatarMenu.addItem("Login", click -> gotoLogin());
