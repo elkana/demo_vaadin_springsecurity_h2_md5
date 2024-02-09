@@ -1,6 +1,6 @@
 package com.example.demovaadin.ui;
 
-import com.example.demovaadin.MainView;
+import com.example.demovaadin.MainLayout;
 import com.example.demovaadin.model.McTask;
 import com.example.demovaadin.repo.TaskRepo;
 import com.example.demovaadin.ui.component.TaskForm;
@@ -19,7 +19,7 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import jakarta.annotation.security.RolesAllowed;
 
 // https://www.youtube.com/watch?v=9jhB9vL7KMM&t=7s
-@Route(value = "adminPaging", layout = MainView.class)
+@Route(value = "adminPaging", layout = MainLayout.class)
 @PageTitle("A view only for admins using paging")
 @RolesAllowed({"ROLE_ADM"})
 public class AdminPagingView extends VerticalLayout {

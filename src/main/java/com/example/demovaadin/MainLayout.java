@@ -22,12 +22,12 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 // https://vaadin.com/docs/latest/application/main-view
-public class MainView extends AppLayout {
+public class MainLayout extends AppLayout {
     SecurityService serviceSecurity;
     Avatar avatar = new Avatar();
 
     // https://vaadin.com/docs/latest/tutorial/login-and-authentication
-    public MainView(SecurityService serviceSecurity) {
+    public MainLayout(SecurityService serviceSecurity) {
         this.serviceSecurity = serviceSecurity;
         H2 title = new H2("Mobile Collection Monitoring");
         title.getStyle().set("font-size", "var(--lumo-font-size-l)")

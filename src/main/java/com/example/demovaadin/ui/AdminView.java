@@ -1,6 +1,6 @@
 package com.example.demovaadin.ui;
 
-import com.example.demovaadin.MainView;
+import com.example.demovaadin.MainLayout;
 import com.example.demovaadin.model.McTask;
 import com.example.demovaadin.service.ServiceTask;
 import com.example.demovaadin.ui.component.TaskForm;
@@ -24,7 +24,7 @@ import jakarta.annotation.security.RolesAllowed;
 // https://www.youtube.com/watch?v=bxy2JgqqKDU
 // https://vaadin.com/docs/latest/advanced/long-running-tasks
 // see ServiceJwtUserDetails#getAuthorities
-@Route(value = "admin", layout = MainView.class)
+@Route(value = "admin", layout = MainLayout.class)
 @PageTitle("A view only for admins")
 @RolesAllowed({ "ROLE_ADM" })
 public class AdminView extends VerticalLayout {
