@@ -31,12 +31,13 @@ public class AdminPagingView extends VerticalLayout {
 
         // configure grid
         var grid = new Grid<McTask>();
+        grid.setSizeFull(); // must to be able to use flex
+        
         grid.addColumn(McTask::getId).setHeader("Id").setComparator(McTask::getId);
         grid.addColumn(McTask::getName).setHeader("Name").setComparator(McTask::getName);
         grid.addColumn(McTask::getDone).setHeader("Is Done").setComparator(McTask::getDone);
         grid.addColumn(McTask::getCreatedDate).setHeader("Created Date")
                 .setTextAlign(ColumnTextAlign.END).setComparator(McTask::getCreatedDate);
-        grid.setSizeFull(); // must to be able to use flex
 
         // gila, cuma gini doank bikin infinite scrollnya
         grid.setItems(VaadinSpringDataHelpers.fromPagingRepository(repoTask));

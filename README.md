@@ -97,3 +97,26 @@ to use:
 ```java
 @Route(value ="adminPaging", layout = MainView.class)
 ```
+
+
+---
+
+## Screenshots
+
+### Login Screen
+
+![Login](img/login.png)
+
+### Admin Screen
+
+![Admin](img/admin-screen.png)
+
+### Task Screen
+
+![Task](img/task-screen.png)
+
+### Dialog Form Screen
+
+![Login](img/dialog-form.png)
+
+

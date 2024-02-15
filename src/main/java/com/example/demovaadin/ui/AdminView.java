@@ -90,6 +90,7 @@ public class AdminView extends VerticalLayout {
         sideBySide.setFlexGrow(1, form);
         sideBySide.setSizeFull();
 
+        btnRefresh.setDisableOnClick(true);
         add(new HorizontalLayout(new H1("Admin Page"), btnRefresh), progressBar,
                 sideBySide);
 
@@ -117,7 +118,7 @@ public class AdminView extends VerticalLayout {
 
     private void refreshList() {
         progressBar.setVisible(true);
-        btnRefresh.setEnabled(false);
+        // btnRefresh.setEnabled(false); better use setDisableOnClick
 
         var ui = UI.getCurrent();
         svcTask.findAsyncTasks(null).thenAccept(result -> {
